@@ -20,17 +20,26 @@ def database_connection(db_path):
 
 
 def initialize_database(db_path=DB_PATH):
-    """Create the employee table if it does not exist."""
+    """Create the employee table and case-insensitive indexes if they do not exist."""
     with database_connection(db_path) as connection:
         connection.execute("""
             CREATE TABLE IF NOT EXISTS employees (
-                employee_id TEXT PRIMARY KEY,
+                employee_id TEXT PRIMARY KEY COLLATE NOCASE,
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 department TEXT NOT NULL,
-                email TEXT NOT NULL UNIQUE,
+                email TEXT NOT NULL UNIQUE COLLATE NOCASE,
                 city TEXT NOT NULL
             )
+        """)
+        # Ensure case-insensitive uniqueness on legacy tables created without COLLATE NOCASE
+        connection.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_employees_id_nocase
+            ON employees(employee_id COLLATE NOCASE)
+        """)
+        connection.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_employees_email_nocase
+            ON employees(email COLLATE NOCASE)
         """)
 
 
@@ -57,12 +66,12 @@ def add_employee(employee_id, first_name, last_name,
     except sqlite3.IntegrityError as error:
         message = str(error).lower()
 
-        if "employees.employee_id" in message:
+        if "employees.employee_id" in message or "idx_employees_id_nocase" in message:
             raise ValueError(
                 "This employee ID already exists."
             ) from error
 
-        if "employees.email" in message:
+        if "employees.email" in message or "idx_employees_email_nocase" in message:
             raise ValueError(
                 "This email is already registered."
             ) from error
@@ -77,19 +86,19 @@ def get_all_employees(db_path=DB_PATH):
             SELECT employee_id, first_name, last_name,
                    department, email, city
             FROM employees
-            ORDER BY employee_id
+            ORDER BY employee_id COLLATE NOCASE
         """)
         return cursor.fetchall()
 
 
 def get_employee_by_id(employee_id, db_path=DB_PATH):
-    """Find one employee using their exact ID."""
+    """Find one employee using their ID (case-insensitive)."""
     with database_connection(db_path) as connection:
         cursor = connection.execute("""
             SELECT employee_id, first_name, last_name,
                    department, email, city
             FROM employees
-            WHERE employee_id = ?
+            WHERE employee_id = ? COLLATE NOCASE
         """, (employee_id.strip(),))
         return cursor.fetchone()
 
@@ -109,7 +118,7 @@ def search_employees(search_text, db_path=DB_PATH):
                OR department LIKE ?
                OR email LIKE ?
                OR city LIKE ?
-            ORDER BY employee_id
+            ORDER BY employee_id COLLATE NOCASE
         """, (pattern,) * 6)
         return cursor.fetchall()
 
@@ -133,7 +142,7 @@ def update_employee(employee_id, first_name, last_name,
                 UPDATE employees
                 SET first_name = ?, last_name = ?,
                     department = ?, email = ?, city = ?
-                WHERE employee_id = ?
+                WHERE employee_id = ? COLLATE NOCASE
             """, (
                 first_name, last_name, department,
                 email, city, employee_id
@@ -149,10 +158,10 @@ def update_employee(employee_id, first_name, last_name,
 
 
 def delete_employee(employee_id, db_path=DB_PATH):
-    """Delete an employee by ID."""
+    """Delete an employee by ID (case-insensitive)."""
     with database_connection(db_path) as connection:
         cursor = connection.execute("""
-            DELETE FROM employees WHERE employee_id = ?
+            DELETE FROM employees WHERE employee_id = ? COLLATE NOCASE
         """, (employee_id.strip(),))
 
         if cursor.rowcount == 0:
