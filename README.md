@@ -185,3 +185,7 @@ Comprehensive engineering documentation is maintained in the `doc/` directory:
 * [`doc/system-architecture.md`](doc/system-architecture.md): Visual Mermaid architectural flowcharts, tiered defense layers, component matrices, and algorithmic complexity analysis ($O(\log N)$ vs $O(N)$).
 * [`doc/test-report.md`](doc/test-report.md): Formal Test Execution Report documenting all 29 automated test cases (TC-01 through TC-29), environments, inputs, and results.
 * [`doc/defect-and-root-cause.md`](doc/defect-and-root-cause.md): Quality engineering defect analysis, 5-Whys root-cause investigation, and corrective action matrix for Quality Goal Q06.
+
+## 10. Entity Relationship Diagram (ERD)
+
+![Employee Management System ERD](doc/erd.png)
