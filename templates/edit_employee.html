@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Employee {{ employee[0] }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+    <div class="content-card">
+      <!-- Card Header -->
+      <div class="p-4 border-bottom bg-white d-flex align-items-center justify-content-between">
+        <div>
+          <h4 class="mb-1 fw-bold text-dark">
+            <i class="bi bi-pencil-square text-primary me-2"></i>Edit Employee Details
+          </h4>
+          <div class="text-muted small">Quality Goal Q06: Form Locking & Uniqueness Preservation</div>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+      </div>
+
+      <!-- Poka-Yoke Form Locking Alert Callout -->
+      <div class="p-4 pb-0">
+        <div class="alert alert-warning border-warning-subtle d-flex align-items-start mb-0 py-2 px-3 small">
+          <i class="bi bi-lock-fill text-warning fs-5 me-2 flex-shrink-0"></i>
+          <div>
+            <strong>Poka-Yoke Form Key Locking:</strong> The <strong>Employee ID</strong> is strictly locked and cannot be edited. This guarantees primary key immutability and prevents operators from accidentally creating duplicate identifiers during updates.
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Employee Form -->
+      <form id="editEmployeeForm" method="POST" action="{{ url_for('edit_employee_route', employee_id=employee[0]) }}" class="p-4" novalidate>
+        <div class="row g-3">
+          <!-- Locked Employee ID -->
+          <div class="col-md-6">
+            <label for="employee_id" class="form-label fw-semibold small text-muted">
+              Employee ID <span class="badge bg-secondary-subtle text-secondary border ms-1"><i class="bi bi-lock-fill"></i> Readonly</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-card-text"></i></span>
+              <input
+                type="text"
+                class="form-control locked-field"
+                id="employee_id"
+                name="employee_id"
+                value="{{ employee[0] }}"
+                readonly
+                tabindex="-1"
+              >
+            </div>
+            <div class="form-text small">Immutable primary identifier.</div>
+          </div>
+
+          <!-- Department -->
+          <div class="col-md-6">
+            <label for="department" class="form-label fw-semibold small text-muted">Department <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-building"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="department"
+                name="department"
+                value="{{ employee[3] }}"
+                placeholder="e.g. Engineering, IT, HR, QA"
+                list="deptSuggestions"
+                required
+              >
+              <datalist id="deptSuggestions">
+                <option value="Engineering">
+                <option value="IT">
+                <option value="Quality Assurance">
+                <option value="Human Resources">
+                <option value="Finance">
+                <option value="Marketing">
+                <option value="Sales">
+              </datalist>
+            </div>
+          </div>
+
+          <!-- First Name -->
+          <div class="col-md-6">
+            <label for="first_name" class="form-label fw-semibold small text-muted">First Name <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="first_name"
+                name="first_name"
+                value="{{ employee[1] }}"
+                placeholder="e.g. Alice"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Last Name -->
+          <div class="col-md-6">
+            <label for="last_name" class="form-label fw-semibold small text-muted">Last Name <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="last_name"
+                name="last_name"
+                value="{{ employee[2] }}"
+                placeholder="e.g. Smith"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="col-md-6">
+            <label for="email" class="form-label fw-semibold small text-muted">Email Address <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                value="{{ employee[4] }}"
+                placeholder="e.g. alice@example.com"
+                required
+              >
+            </div>
+            <div class="form-text small">Must be unique across all employees.</div>
+          </div>
+
+          <!-- City -->
+          <div class="col-md-6">
+            <label for="city" class="form-label fw-semibold small text-muted">City <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-geo-alt"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="city"
+                name="city"
+                value="{{ employee[5] }}"
+                placeholder="e.g. Bengaluru, Delhi"
+                required
+              >
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Form Actions -->
+        <div class="d-flex justify-content-between align-items-center">
+          <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-1"></i> Cancel
+          </a>
+          <!-- Button triggers Poka-Yoke modal -->
+          <button type="button" class="btn btn-primary px-4" id="btnOpenEditModal">
+            <i class="bi bi-check2 me-1"></i> Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Poka-Yoke Edit Confirmation Modal -->
+<div class="modal fade" id="editConfirmModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-primary text-white py-3">
+        <h5 class="modal-title d-flex align-items-center" id="editModalLabel">
+          <i class="bi bi-question-circle-fill me-2"></i> Confirm Update
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <p class="mb-2">Are you sure you want to save modifications for employee <strong class="text-primary">{{ employee[0] }}</strong>?</p>
+        <p class="text-muted small mb-0">
+          <em>Poka-Yoke Safeguard: Email uniqueness will be verified before committing changes.</em>
+        </p>
+      </div>
+      <div class="modal-footer bg-light py-2">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmUpdateSubmit">
+          <i class="bi bi-check2 me-1"></i> Yes, Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Poka-Yoke validation & modal confirmation for update
+  document.getElementById('btnOpenEditModal').addEventListener('click', function() {
+    const firstName = document.getElementById('first_name').value.trim();
+    const lastName = document.getElementById('last_name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const dept = document.getElementById('department').value.trim();
+    const city = document.getElementById('city').value.trim();
+
+    if (!firstName || !lastName || !email || !dept || !city) {
+      alert("Please fill in all required fields before saving.");
+      return;
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('editConfirmModal'));
+    modal.show();
+  });
+
+  document.getElementById('btnConfirmUpdateSubmit').addEventListener('click', function() {
+    document.getElementById('editEmployeeForm').submit();
+  });
+</script>
+{% endblock %}

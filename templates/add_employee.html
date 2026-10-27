@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Employee{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+    <div class="content-card">
+      <!-- Card Header -->
+      <div class="p-4 border-bottom bg-white d-flex align-items-center justify-content-between">
+        <div>
+          <h4 class="mb-1 fw-bold text-dark">
+            <i class="bi bi-person-plus-fill text-success me-2"></i>Add New Employee
+          </h4>
+          <div class="text-muted small">Quality Goal Q06: Pre-Add Validation & Duplicate Prevention</div>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+      </div>
+
+      <!-- Quality Goal Rule Alert Callout -->
+      <div class="p-4 pb-0">
+        <div class="alert alert-info border-info-subtle d-flex align-items-start mb-0 py-2 px-3 small">
+          <i class="bi bi-shield-check text-info fs-5 me-2 flex-shrink-0"></i>
+          <div>
+            <strong>TQM Q06 Integrity Rules:</strong> Both <strong>Employee ID</strong> and <strong>Email</strong> must be strictly unique. The SQLite database enforces case-insensitive uniqueness (e.g. <code>E101</code> and <code>e101</code> are treated as identical).
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Employee Form -->
+      <form id="addEmployeeForm" method="POST" action="{{ url_for('add_employee_route') }}" class="p-4" novalidate>
+        <div class="row g-3">
+          <!-- Employee ID -->
+          <div class="col-md-6">
+            <label for="employee_id" class="form-label fw-semibold small text-muted">Employee ID <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-card-text"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="employee_id"
+                name="employee_id"
+                value="{{ form_data.get('employee_id', '') }}"
+                placeholder="e.g. E102"
+                required
+                autofocus
+              >
+            </div>
+            <div class="form-text small">Unique primary identifier. Case-insensitive.</div>
+          </div>
+
+          <!-- Department -->
+          <div class="col-md-6">
+            <label for="department" class="form-label fw-semibold small text-muted">Department <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-building"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="department"
+                name="department"
+                value="{{ form_data.get('department', '') }}"
+                placeholder="e.g. Engineering, IT, HR, QA"
+                list="deptSuggestions"
+                required
+              >
+              <datalist id="deptSuggestions">
+                <option value="Engineering">
+                <option value="IT">
+                <option value="Quality Assurance">
+                <option value="Human Resources">
+                <option value="Finance">
+                <option value="Marketing">
+                <option value="Sales">
+              </datalist>
+            </div>
+          </div>
+
+          <!-- First Name -->
+          <div class="col-md-6">
+            <label for="first_name" class="form-label fw-semibold small text-muted">First Name <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="first_name"
+                name="first_name"
+                value="{{ form_data.get('first_name', '') }}"
+                placeholder="e.g. Alice"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Last Name -->
+          <div class="col-md-6">
+            <label for="last_name" class="form-label fw-semibold small text-muted">Last Name <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="last_name"
+                name="last_name"
+                value="{{ form_data.get('last_name', '') }}"
+                placeholder="e.g. Smith"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="col-md-6">
+            <label for="email" class="form-label fw-semibold small text-muted">Email Address <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                value="{{ form_data.get('email', '') }}"
+                placeholder="e.g. alice@example.com"
+                required
+              >
+            </div>
+            <div class="form-text small">Must be unique and match standard syntax.</div>
+          </div>
+
+          <!-- City -->
+          <div class="col-md-6">
+            <label for="city" class="form-label fw-semibold small text-muted">City <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-geo-alt"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="city"
+                name="city"
+                value="{{ form_data.get('city', '') }}"
+                placeholder="e.g. Bengaluru, Delhi"
+                required
+              >
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Form Actions -->
+        <div class="d-flex justify-content-between align-items-center">
+          <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-1"></i> Cancel
+          </a>
+          <!-- Button triggers Poka-Yoke modal -->
+          <button type="button" class="btn btn-success px-4" id="btnOpenAddModal">
+            <i class="bi bi-check2-circle me-1"></i> Add Employee
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Poka-Yoke Add Confirmation Modal -->
+<div class="modal fade" id="addConfirmModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-success text-white py-3">
+        <h5 class="modal-title d-flex align-items-center" id="addModalLabel">
+          <i class="bi bi-question-circle-fill me-2"></i> Confirm Addition
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <p class="mb-2">Are you sure you want to add this new employee record?</p>
+        <ul class="list-group list-group-flush mb-0 small">
+          <li class="list-group-item px-0 py-1 d-flex justify-content-between">
+            <span class="text-muted">Employee ID:</span>
+            <strong id="confirmEmpId" class="emp-id-badge"></strong>
+          </li>
+          <li class="list-group-item px-0 py-1 d-flex justify-content-between">
+            <span class="text-muted">Full Name:</span>
+            <strong id="confirmEmpName"></strong>
+          </li>
+          <li class="list-group-item px-0 py-1 d-flex justify-content-between">
+            <span class="text-muted">Email:</span>
+            <strong id="confirmEmpEmail"></strong>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer bg-light py-2">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="btnConfirmSubmit">
+          <i class="bi bi-check2-circle me-1"></i> Yes, Add Employee
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Poka-Yoke validation & modal confirmation
+  document.getElementById('btnOpenAddModal').addEventListener('click', function() {
+    const form = document.getElementById('addEmployeeForm');
+    const empId = document.getElementById('employee_id').value.trim();
+    const firstName = document.getElementById('first_name').value.trim();
+    const lastName = document.getElementById('last_name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const dept = document.getElementById('department').value.trim();
+    const city = document.getElementById('city').value.trim();
+
+    // Basic quick check
+    if (!empId || !firstName || !lastName || !email || !dept || !city) {
+      alert("Please fill in all required fields before proceeding.");
+      return;
+    }
+
+    // Populate modal summary
+    document.getElementById('confirmEmpId').textContent = empId;
+    document.getElementById('confirmEmpName').textContent = firstName + " " + lastName;
+    document.getElementById('confirmEmpEmail').textContent = email;
+
+    const modal = new bootstrap.Modal(document.getElementById('addConfirmModal'));
+    modal.show();
+  });
+
+  document.getElementById('btnConfirmSubmit').addEventListener('click', function() {
+    document.getElementById('addEmployeeForm').submit();
+  });
+</script>
+{% endblock %}
