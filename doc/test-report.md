@@ -119,13 +119,19 @@ The automated test suite comprises **29 automated test cases** (TC-01 through TC
 
 ## 4. Test Execution Summary
 
-Verified test run by command output:
+Verified test run using the command:
 
-* **Total Tests Executed:** **29**
-* **Passed:** **29 (100%)**
-* **Failed:** **0 (0%)**
-* **Errors:** **0 (0%)**
-* **Verified Execution Duration:** **0.957 seconds** (captured from test runner output)
+```powershell
+python -m unittest discover -s tests -v
+```
+
+- **Total Tests Executed:** 29
+- **Passed:** 29 (100%)
+- **Failed:** 0 (0%)
+- **Errors:** 0 (0%)
+- **Verified Execution Duration:** 0.823 seconds
+
+All 29 automated tests passed during the latest recorded execution.
 
 ---
 

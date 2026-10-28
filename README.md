@@ -189,3 +189,14 @@ Comprehensive engineering documentation is maintained in the `doc/` directory:
 ## 10. Entity Relationship Diagram (ERD)
 
 ![Employee Management System ERD](doc/erd.png)
+
+## 11. Project Evidence
+
+The following evidence supports Quality Goal Q06 — Reduce Duplicate Entries.
+
+- [KPI Evidence](doc/evidence/kpi-evidence.md)
+- [Dashboard Screenshot](doc/evidence/01-dashboard.png)
+- [Add Employee Screenshot](doc/evidence/02-add-employee.png)
+- [Search Results Screenshot](doc/evidence/03-search-results.png)
+- [Edit Employee Screenshot](doc/evidence/04-edit-employee.png)
+- [Duplicate Prevention Screenshot](doc/evidence/05-duplicate-prevention.png)
