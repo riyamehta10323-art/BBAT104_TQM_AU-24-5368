@@ -200,3 +200,7 @@ The following evidence supports Quality Goal Q06 — Reduce Duplicate Entries.
 - [Search Results Screenshot](doc/evidence/03-search-results.png)
 - [Edit Employee Screenshot](doc/evidence/04-edit-employee.png)
 - [Duplicate Prevention Screenshot](doc/evidence/05-duplicate-prevention.png)
+
+## 12. Process Flow Diagram
+
+![Employee Management System Process Flow](doc/process-flow.png)
