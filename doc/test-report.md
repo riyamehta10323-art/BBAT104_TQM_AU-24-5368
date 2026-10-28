@@ -1,9 +1,9 @@
-# Test Execution Report: Q06 Reduce Duplicate Entries
+﻿# Test Execution Report: Q06 Reduce Duplicate Entries
 ## Dual-Interface Test Suite (Database & Web Routes)
 
 - **Project:** Employee Management System
-- **Course / Module:** BBAT104 — Total Quality Management (TQM)
-- **Quality Objective:** Q06 — Reduce Duplicate Entries
+- **Course / Module:** BBAT104 â€” Total Quality Management (TQM)
+- **Quality Objective:** Q06 â€” Reduce Duplicate Entries
 - **Author / Student ID:** Riya Mehta (AU-24-5368)
 - **Baseline Commit:** `e0e99ab` (Phase 1)
 - **Corrective Commit:** `b6ff8be` (Phase 3)
@@ -129,7 +129,7 @@ python -m unittest discover -s tests -v
 - **Passed:** 29 (100%)
 - **Failed:** 0 (0%)
 - **Errors:** 0 (0%)
-- **Verified Execution Duration:** 0.823 seconds
+- **Verified Execution Duration:** 1.108 seconds
 
 All 29 automated tests passed during the latest recorded execution.
 
@@ -183,3 +183,4 @@ The system's behavior when interacting with older database files was evaluated t
 ## 8. Conclusion
 
 The 29 automated test cases across `tests/test_database.py` and `tests/test_web.py` confirm that both the relational database layer and the Flask web application satisfy TQM Quality Objective Q06 by enforcing case-insensitive uniqueness, validating input formats, locking immutable keys, and safeguarding data operations across both desktop and web interfaces.
+
